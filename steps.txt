@@ -1,0 +1,12 @@
+layout
+dependencies
+mainifest
+
+Amplify setup
+
+admin user and cli should be pre set up
+
+
+Storage Setup
+File to Uri
+Request permission 
