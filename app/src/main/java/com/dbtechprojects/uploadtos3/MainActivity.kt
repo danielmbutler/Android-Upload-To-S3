@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        Amplify().intializeAmplify(this@MainActivity)
+        AmplifyInit().intializeAmplify(this@MainActivity)
 
         button.setOnClickListener {
             // CHECK PERMISSIONS
@@ -52,6 +52,11 @@ class MainActivity : AppCompatActivity() {
                 )
             }
 
+        }
+
+        GalleryButton.setOnClickListener {
+            val intent = Intent(this@MainActivity, GalleryActivity::class.java)
+            startActivity(intent)
         }
 
 
@@ -137,7 +142,7 @@ class MainActivity : AppCompatActivity() {
             Amplify.Storage.uploadInputStream(
                     "UploadedFile" + randomNumber.toString(),
                     it,
-                    { result -> Toast.makeText(this, "File has Successfully Uploaded", Toast.LENGTH_SHORT).show() },
+                    { result -> Toast.makeText(this, "File has Successfully Uploaded:" + result.key, Toast.LENGTH_SHORT).show() },
                     { error -> Log.e("MyAmplifyApp", "Upload failed", error) }
         )
         }

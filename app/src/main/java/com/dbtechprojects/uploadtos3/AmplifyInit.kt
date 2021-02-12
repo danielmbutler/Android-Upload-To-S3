@@ -10,7 +10,7 @@ import com.amplifyframework.core.Amplify.configure
 import com.amplifyframework.storage.s3.AWSS3StoragePlugin
 import com.amplifyframework.util.UserAgent.configure
 
-class Amplify (){
+class AmplifyInit (){
 
 public fun intializeAmplify(Context: Context){
         try {
