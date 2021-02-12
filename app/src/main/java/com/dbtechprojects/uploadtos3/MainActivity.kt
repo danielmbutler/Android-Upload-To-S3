@@ -23,29 +23,7 @@ class MainActivity : AppCompatActivity() {
 
 
 
-    private fun uploadFile(Uri: String) {
 
-    println(Uri)
-    val File = File(Uri)
-
-
-       Amplify.Storage.uploadFile(
-           "UploadedFile",
-           File,
-           { result -> Toast.makeText(this, "File has Successfully Uploaded", Toast.LENGTH_SHORT).show() },
-           { error -> Log.e("MyAmplifyApp", "Upload failed", error) }
-       )
-    }
-
-    fun showImageChooser(activity: Activity) {
-        // An intent for launching the image selection of phone storage.
-        val galleryIntent = Intent(
-            Intent.ACTION_PICK,
-            MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-        )
-        // Launches the image selection of phone storage using the constant code.
-        activity.startActivityForResult(galleryIntent, 2)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -89,24 +67,24 @@ class MainActivity : AppCompatActivity() {
                         // The uri of selected image from phone storage.
                         mSelectedImageFileUri = data.data!!
 
-                        Log.d("MainActivity", mSelectedImageFileUri.toString())
+//                        Log.d("MainActivity", mSelectedImageFileUri.toString())
+//
+//                        // Convert Uri to File Path
+//
+//                        val filePathColumn = arrayOf(MediaStore.Images.Media.DATA)
+//                        val cursor = contentResolver.query(
+//                            mSelectedImageFileUri!!,
+//                            filePathColumn, null, null, null
+//                        )
+//                        cursor!!.moveToFirst()
+//                        val columnIndex = cursor!!.getColumnIndex(filePathColumn[0])
+//                        val picturePath = cursor!!.getString(columnIndex)
+//                        cursor!!.close()
+//                        // String picturePath contains the path of selected Image
+//                        // String picturePath contains the path of selected Image
+//                        var photoPath = picturePath
 
-                        // Convert Uri to File Path
-
-                        val filePathColumn = arrayOf(MediaStore.Images.Media.DATA)
-                        val cursor = contentResolver.query(
-                            mSelectedImageFileUri!!,
-                            filePathColumn, null, null, null
-                        )
-                        cursor!!.moveToFirst()
-                        val columnIndex = cursor!!.getColumnIndex(filePathColumn[0])
-                        val picturePath = cursor!!.getString(columnIndex)
-                        cursor!!.close()
-                        // String picturePath contains the path of selected Image
-                        // String picturePath contains the path of selected Image
-                        var photoPath = picturePath
-
-                        uploadFile(photoPath)
+                        uploadFile(mSelectedImageFileUri!!)
 
 
                     } catch (e: IOException) {
@@ -145,5 +123,33 @@ class MainActivity : AppCompatActivity() {
                 ).show()
             }
         }
+    }
+
+    private fun uploadFile(Uri: Uri) {
+
+        println("Upload: $Uri")
+        val exampleInputStream = getContentResolver().openInputStream(Uri)
+        println("Upload: $exampleInputStream")
+
+        val randomNumber = (1000..9999).random()
+
+        exampleInputStream?.let {
+            Amplify.Storage.uploadInputStream(
+                    "UploadedFile" + randomNumber.toString(),
+                    it,
+                    { result -> Toast.makeText(this, "File has Successfully Uploaded", Toast.LENGTH_SHORT).show() },
+                    { error -> Log.e("MyAmplifyApp", "Upload failed", error) }
+        )
+        }
+    }
+
+    fun showImageChooser(activity: Activity) {
+        // An intent for launching the image selection of phone storage.
+        val galleryIntent = Intent(
+            Intent.ACTION_PICK,
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+        )
+        // Launches the image selection of phone storage using the constant code.
+        activity.startActivityForResult(galleryIntent, 2)
     }
 }

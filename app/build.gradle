@@ -56,7 +56,5 @@ dependencies {
     implementation 'com.amplifyframework:aws-storage-s3:1.6.4'
     implementation 'com.amplifyframework:aws-auth-cognito:1.6.4'
 
-    // transfer utility
 
-    implementation 'com.amazonaws:aws-android-sdk-s3:2.19.3'
 }
