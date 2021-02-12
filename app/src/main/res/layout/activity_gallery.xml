@@ -36,11 +36,11 @@
         android:id="@+id/FileDwnBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="92dp"
+        android:layout_marginTop="72dp"
         android:text="Download"
         android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="@+id/FileListTV"
-        app:layout_constraintStart_toStartOf="@+id/FileListTV"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/FileListTV" />
 
     <ProgressBar
@@ -51,28 +51,28 @@
         android:layout_marginBottom="16dp"
         android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/FileDwnBtn"
+        app:layout_constraintEnd_toEndOf="@+id/FileDwnBtn"
         app:layout_constraintStart_toStartOf="@+id/FileDwnBtn" />
 
     <TextView
         android:id="@+id/FileNameTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginTop="76dp"
+        android:padding="16dp"
         android:text="TextView"
         android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@+id/progressBar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.087"
-        app:layout_constraintStart_toEndOf="@+id/progressBar"
-        app:layout_constraintTop_toTopOf="@+id/progressBar"
-        app:layout_constraintVertical_bias="0.517" />
+        app:layout_constraintEnd_toEndOf="@+id/FileDwnBtn"
+        app:layout_constraintHorizontal_bias="0.464"
+        app:layout_constraintStart_toStartOf="@+id/FileDwnBtn"
+        app:layout_constraintTop_toBottomOf="@+id/FileDwnBtn" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/FileRecyclerView"
         android:layout_width="409dp"
         android:layout_height="405dp"
         android:layout_marginTop="16dp"
+        android:layout_marginBottom="?attr/actionBarSize"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/FileDwnBtn" />

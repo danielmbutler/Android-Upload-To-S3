@@ -13,14 +13,18 @@ import com.dbtechprojects.uploadtos3.adapter.PictureAdapter
 import kotlinx.android.synthetic.main.activity_gallery.*
 import kotlinx.coroutines.*
 import java.io.File
+import kotlin.concurrent.thread
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 
 class GalleryActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_gallery)
 
-        val randomNumber = (1000..9999).random()
+
 
         Amplify.Storage.list(
                 "",
@@ -61,33 +65,60 @@ class GalleryActivity : AppCompatActivity() {
 
     }
 
-    fun deletefiles(file: S3File, pos: Int){
+  fun deletefiles(file: S3File, pos: Int, list: ArrayList<S3File>){
         println(file)
         println(pos)
+        Log.d("predelete", list.toString())
 
-        // delete file
+      suspend fun delfile(): String {
+          return suspendCoroutine { continuation ->
+              Amplify.Storage.remove(
+                  file.origin,
+                  { result -> Log.d("MyAmplifyApp", "Successfully removed: " + result.getKey())
+                      continuation.resume("success")
 
-        Amplify.Storage.remove(
-            file.key,
-            { result -> Log.d("MyAmplifyApp", "Successfully removed: " + result.getKey())
-                FileRecyclerView.adapter?.notifyItemRemoved(pos)
-                FileRecyclerView.adapter?.notifyDataSetChanged()
-            },
-            { error -> Log.e("MyAmplifyApp", "Remove failure", error) }
-        )
 
-    }
+                  },
+                  { error -> Log.e("MyAmplifyApp", "Remove failure", error)
+
+                  }
+              )
+          }
+      }
+
+      GlobalScope.launch(Dispatchers.IO){
+          val del = delfile()
+          if(del == "success"){
+              Log.d("delete", del)
+              withContext(Dispatchers.Main){
+                  list.removeAt(pos)
+                  populaterv(list)
+              }
+          }
+      }
+
+
+        }
+
+
+
 
 
 
     fun populaterv(list: ArrayList<S3File>){
         Log.d("downloadlist", list.toString())
-        FileNameTV.visibility = View.GONE
-        progressBar.visibility = View.GONE
+        if (FileNameTV.visibility == View.VISIBLE){
+            FileNameTV.visibility = View.GONE
+        }
+
+        if(progressBar.visibility == View.VISIBLE){
+            progressBar.visibility = View.GONE
+        }
+
 
         FileRecyclerView.apply {
             layoutManager = GridLayoutManager(this@GalleryActivity,3)
-            adapter = PictureAdapter(this@GalleryActivity, list, GalleryActivity())
+            adapter = PictureAdapter(this@GalleryActivity, list, this@GalleryActivity)
             (adapter as PictureAdapter).notifyDataSetChanged()
         }
     }
@@ -117,7 +148,8 @@ class GalleryActivity : AppCompatActivity() {
                         downloadprogress(result.getFile().name)
                         val fileobj = S3File(
                             path = result.file.absolutePath,
-                            key = result.file.name,
+                            key = result.file.name, // downloaded filename
+                            origin = item, //original filename
                         )
                         filepaths += fileobj
                         println("filelists${filepaths.size} ${file.size}")

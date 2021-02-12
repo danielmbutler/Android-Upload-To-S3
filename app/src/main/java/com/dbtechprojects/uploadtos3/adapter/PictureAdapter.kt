@@ -63,7 +63,7 @@ open class PictureAdapter(
                 builder.setMessage("Do you want to delete this file from the bucket ?")
                     .setCancelable(false)
                     .setPositiveButton("Yes") { dialog, id ->
-                        Activity.deletefiles(file, position)
+                        Activity.deletefiles(file, position, list)
                     }
 
                     .setNegativeButton("No") { dialog, id ->
