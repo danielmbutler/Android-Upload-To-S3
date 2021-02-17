@@ -134,9 +134,9 @@ class GalleryActivity : AppCompatActivity() {
         val downloadFolder = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
 
             val filepaths = arrayListOf<S3File>()
-            file.size
-            file.forEach { item-> val randomNumber = (1000..9999).random()
 
+            file.forEach { item-> val randomNumber = (1000..9999).random()
+                Thread.sleep(500)
                 Amplify.Storage.downloadFile(
                     item,
                     File("$downloadFolder/download$randomNumber.jpg"),
@@ -146,6 +146,7 @@ class GalleryActivity : AppCompatActivity() {
                     },
                     { result -> Log.d("MyAmplifyApp", "Successfully downloaded: ${result.getFile().name} Path: ${result.file.absolutePath}")
                         downloadprogress(result.getFile().name)
+
                         val fileobj = S3File(
                             path = result.file.absolutePath,
                             key = result.file.name, // downloaded filename
